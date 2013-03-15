@@ -32,6 +32,7 @@ if (tep_not_null($action)) {
 	switch ($action) {
     	case 'sticker':
     		$response = $easypack24Model->sticker($pID);
+
 			break;
 		case 'refresh_status':
 	        $pID = tep_db_prepare_input($HTTP_GET_VARS['pID']);

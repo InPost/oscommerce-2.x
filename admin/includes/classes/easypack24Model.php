@@ -30,7 +30,7 @@ class Easypack24Model {
         }
 
         if(empty($parcelsCode)){
-            $this->messageStack->add_session('Parcel ID is empty', 'error');
+            $this->messageStack->add('Parcel ID is empty', 'error');
         }else{
 
             if($parcel['sticker_creation_date'] == ''){
@@ -46,7 +46,7 @@ class Easypack24Model {
                     $countNonSticker = count($parcelsIds);
                     if(!empty($parcelApiPay['result'])){
                         foreach(@$parcelApiPay['result'] as $key => $error){
-                            $this->messageStack->add_session('Parcel '.$key.' '.$error, 'error');
+                            $this->messageStack->add('Parcel '.$key.' '.$error, 'error');
                         }
                     }
                     return;
@@ -68,7 +68,7 @@ class Easypack24Model {
             $countNonSticker = count($parcelsIds);
             if(!empty($parcelApi['result'])){
                 foreach(@$parcelApi['result'] as $key => $error){
-                    $this->messageStack->add_session('Parcel '.$key.' '.$error, 'error');
+                    $this->messageStack->add('Parcel '.$key.' '.$error, 'error');
                 }
             }
         }else{
@@ -90,13 +90,13 @@ class Easypack24Model {
 
         if ($countNonSticker) {
             if ($countNonSticker) {
-                $this->messageStack->add_session($countNonSticker.' sticker(s) cannot be generated', 'error');
+                $this->messageStack->add($countNonSticker.' sticker(s) cannot be generated', 'error');
             } else {
-                $this->messageStack->add_session('The sticker(s) cannot be generated', 'error');
+                $this->messageStack->add('The sticker(s) cannot be generated', 'error');
             }
         }
         if ($countSticker) {
-            $this->messageStack->add_session($countSticker.' sticker(s) have been generated.', 'success');
+            $this->messageStack->add($countSticker.' sticker(s) have been generated.', 'success');
         }
 
         if(!is_null($pdf)){
@@ -274,7 +274,7 @@ class Easypack24Model {
                                 $this->messageStack->add_session('Parcel '.$key.' '.$postData['parcel_id'].' '.$subError, 'error');
                             }
                         }else{
-                            $this->messageStack->add('Parcel '.$key.' '.$error, 'error');
+                            $this->messageStack->add_session('Parcel '.$key.' '.$error, 'error');
                         }
                     }
                 }
@@ -299,7 +299,7 @@ class Easypack24Model {
                             where id = '" . $id . "'"
                 );
             }
-            $this->messageStack->add('Parcel modified', 'success');
+            $this->messageStack->add_session('Parcel modified', 'success');
             return;
         } catch (Exception $e) {
             //$vmLogger->err($e->getMessage());
