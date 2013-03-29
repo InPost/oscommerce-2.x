@@ -47,7 +47,9 @@ class easypack24 {
 		$customer = $this->get_customer();
 		
 		$dest_country = $order->delivery['country']['iso_code_2'];
-		$errors = false;
+		if($dest_country == 'GB'){$dest_country = 'UK';}
+
+        $errors = false;
 
         $countries_table = explode(',', constant('MODULE_SHIPPING_EASYPACK24_ALLOWED_COUNTRY'));
 
@@ -406,8 +408,25 @@ class easypack24 {
         $parcelApi = easypack24_connect($params);
 
         if(@$parcelApi['info']['redirect_url'] != ''){
-            $tmp = explode('/', @$parcelApi['info']['redirect_url']);
-            $parcel_id = $tmp[count($tmp)-1];
+
+            // get machines
+            $parcelApi = easypack24_connect(
+                array(
+                    'url' => $parcelApi['info']['redirect_url'],
+                    'token' => constant('MODULE_SHIPPING_EASYPACK24_API_KEY'),
+                    'ds' => '&',
+                    'methodType' => 'GET',
+                    'params' => array(
+                    )
+                )
+            );
+
+            if(!isset($parcelApi['result']->id)){
+                return false;
+            }
+
+            $parcel_id = $parcelApi['result']->id;
+
             $fields = array(
                 'order_id' => $order_id,
                 'parcel_id' => $parcel_id,

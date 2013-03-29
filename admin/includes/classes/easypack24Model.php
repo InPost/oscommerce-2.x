@@ -221,7 +221,7 @@ class Easypack24Model {
                         );
                         tep_db_query("update " . TABLE_ORDER_SHIPPING_EASYPACK24 . " set
                             parcel_status = '" . $fields['parcel_status'] . "'
-                            where id = '" . @$parcel->id . "'"
+                            where parcel_id = '" . @$parcel->id . "'"
                         );
                         $countCancel++;
                     }
