@@ -17,6 +17,7 @@ class Easypack24Model {
         $countNonSticker = 0;
         $pdf = null;
         $parcelsCode = array();
+        $parcelsToPay = array();
 
         foreach ($parcelsIds as $key => $id) {
             $parcel_query  = tep_db_query("SELECT * FROM ".TABLE_ORDER_SHIPPING_EASYPACK24." WHERE id = '". $id . "'");
@@ -24,6 +25,9 @@ class Easypack24Model {
 
             if($parcel['parcel_id'] != ''){
                 $parcelsCode[$id] = $parcel['parcel_id'];
+                if($parcel['sticker_creation_date'] == ''){
+                    $parcelsToPay[$id] = $parcel['parcel_id'];
+                }
             }else{
                 continue;
             }
@@ -32,10 +36,9 @@ class Easypack24Model {
         if(empty($parcelsCode)){
             $this->messageStack->add('Parcel ID is empty', 'error');
         }else{
-
-            if($parcel['sticker_creation_date'] == ''){
+            if(!empty($parcelsToPay)){
                 $parcelApiPay = easypack24_connect(array(
-                    'url' => constant('MODULE_SHIPPING_EASYPACK24_API_URL').'parcels/'.implode(';', $parcelsCode).'/pay',
+                    'url' => constant('MODULE_SHIPPING_EASYPACK24_API_URL').'parcels/'.implode(';', $parcelsToPay).'/pay',
                     'token' => constant('MODULE_SHIPPING_EASYPACK24_API_KEY'),
                     'methodType' => 'POST',
                     'params' => array(
@@ -78,11 +81,13 @@ class Easypack24Model {
                     'sticker_creation_date' => date('Y-m-d H:i:s')
                 );
 
-                tep_db_query("update " . TABLE_ORDER_SHIPPING_EASYPACK24 . " set
-                    parcel_status = '" . $fields['parcel_status'] . "',
-                    sticker_creation_date = '" . $fields['sticker_creation_date'] . "'
-                    where id = '" . $parcelId . "'"
-                );
+                if(isset($parcelsToPay[$parcelId])){
+                    tep_db_query("update " . TABLE_ORDER_SHIPPING_EASYPACK24 . " set
+                        parcel_status = '" . $fields['parcel_status'] . "',
+                        sticker_creation_date = '" . $fields['sticker_creation_date'] . "'
+                        where id = '" . $parcelId . "'"
+                    );
+                }
                 $countSticker++;
             }
             $pdf = base64_decode(@$parcelApi['result']);

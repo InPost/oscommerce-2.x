@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+
+
   include('includes/application_top.php');
 
 // if the customer is not logged on, redirect them to the login page
@@ -257,11 +259,28 @@
     $email_order .= strip_tags($order_totals[$i]['title']) . ' ' . strip_tags($order_totals[$i]['text']) . "\n";
   }
 
+  // start easypack24
   if ($order->content_type != 'virtual') {
-    $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" . 
-                    EMAIL_SEPARATOR . "\n" .
-                    tep_address_label($customer_id, $sendto, 0, '', "\n") . "\n";
+      if (preg_match('/easypack24/', $shipping['id'])) {
+          $format_id = tep_get_address_format_id($address['country_id']);
+          $order->delivery['street_address'] = $shipping['easypack24']['parcelTargetMachineDetail']['address']['street'].' '.$shipping['easypack24']['parcelTargetMachineDetail']['address']['building_number'];
+          if(@$shipping['easypack24']['parcelTargetMachineDetail']['address']['flat_number'] != ''){
+              $order->delivery['street_address'] .= '/'.$shipping['easypack24']['parcelTargetMachineDetail']['address']['flat_number'];
+          }
+          $order->delivery['city'] = $shipping['easypack24']['parcelTargetMachineDetail']['address']['city'];
+          $order->delivery['postcode'] = $shipping['easypack24']['parcelTargetMachineDetail']['address']['post_code'];
+          $order->delivery['state'] = $shipping['easypack24']['parcelTargetMachineDetail']['address']['province'];
+
+          $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
+              EMAIL_SEPARATOR . "\n" .
+              tep_address_format($format_id, $order->delivery, false, '', "\n") . "\n";
+      }else{
+          $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
+              EMAIL_SEPARATOR . "\n" .
+              tep_address_label($customer_id, $sendto, 0, '', "\n") . "\n";
+      }
   }
+  // end easypack24
 
   $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
                   EMAIL_SEPARATOR . "\n" .

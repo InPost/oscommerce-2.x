@@ -32,8 +32,11 @@ class easypack24 {
 		$account = tep_db_fetch_array($account_query);
 		$customer['email'] = $account['customers_email_address'];
 		$customer['phone'] = $account['customers_telephone'];
+        if(!preg_match('/^[1-9]{1}\d{8}$/', $account['customers_telephone'])){
+            $customer['phone'] = null;
+        }
 
-		$account_query = tep_db_query("select entry_postcode, entry_city from " . TABLE_ADDRESS_BOOK . " where address_book_id = '" . (int)$sendto . "'");
+        $account_query = tep_db_query("select entry_postcode, entry_city from " . TABLE_ADDRESS_BOOK . " where address_book_id = '" . (int)$sendto . "'");
 		$account = tep_db_fetch_array($account_query);
 		$customer['postcode'] = $account['entry_postcode'];
         $customer['city'] = $account['entry_city'];
@@ -45,7 +48,7 @@ class easypack24 {
 		global $order, $total_weight, $shipping_weight, $shipping_num_boxes, $customer_id, $sendto, $easypack24;
 
 		$customer = $this->get_customer();
-		
+
 		$dest_country = $order->delivery['country']['iso_code_2'];
 		if($dest_country == 'GB'){$dest_country = 'UK';}
 
@@ -73,7 +76,7 @@ class easypack24 {
 
         // check weight
 		if ($total_weight > constant('MODULE_SHIPPING_EASYPACK24_MAX_WEIGHT')) {
-            $errors[] = MODULE_SHIPPING_EASYPACK24_UNDEFINED_RATE.' ('.$total_weight.') ';
+            $errors[] = MODULE_SHIPPING_EASYPACK24_UNDEFINED_RATE.' '.MODULE_SHIPPING_EASYPACK24_TEXT_UNITS.' ('.$total_weight.' '.MODULE_SHIPPING_EASYPACK24_TEXT_UNITS.') ';
             //tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, 'error_message='.MODULE_SHIPPING_EASYPACK24_UNDEFINED_RATE));
 		}
 
@@ -181,7 +184,7 @@ class easypack24 {
 	}
 
 	function install() {
-		$default_countries = 'EN';
+		$default_countries = 'UK';
 		
 		tep_db_query("create table if not exists order_shipping_easypack24 (
           id int(11) unsigned NOT NULL auto_increment,
@@ -196,10 +199,11 @@ class easypack24 {
 	      PRIMARY KEY (id));"
         );
 		
-		tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Enable module InPost Parcel Lockers 24/7', 'MODULE_SHIPPING_EASYPACK24_STATUS', 'True', 'Czy chcesz dodac opcje wysylki do Paczkomaty InPost?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
+		tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Enable module InPost Parcel Lockers 24/7', 'MODULE_SHIPPING_EASYPACK24_STATUS', 'True', 'Do you want to offer InPost Parcel Lockers 24/7 shipping?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
 		tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Api url', 'MODULE_SHIPPING_EASYPACK24_API_URL', 'http://api-uk.easypack24.net/', 'Api url from easypack24', '6', '0', now())");
         tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Api key', 'MODULE_SHIPPING_EASYPACK24_API_KEY', '', 'Api key from easypack24', '6', '0', now())");
         tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Price', 'MODULE_SHIPPING_EASYPACK24_PRICE', '14', 'Sending price', '6', '0', now())");
+        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Tax Class', 'MODULE_SHIPPING_EASYPACK24_TAX_CLASS', '0', 'Use the following tax class on the shipping fee.', '6', '0', 'tep_get_tax_class_title', 'tep_cfg_pull_down_tax_classes(', now())");
         tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Max weight', 'MODULE_SHIPPING_EASYPACK24_MAX_WEIGHT', '25', 'Total weight of items in checkout', '6', '0', now())");
         tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Max dimension a', 'MODULE_SHIPPING_EASYPACK24_MAX_DIMENSION_A', '8x38x64', 'Max dimension of items in checkout', '6', '0', now())");
         tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Max dimension b', 'MODULE_SHIPPING_EASYPACK24_MAX_DIMENSION_B', '19x38x64', 'Max dimension of items in checkout', '6', '0', now())");
@@ -218,6 +222,7 @@ class easypack24 {
 			'MODULE_SHIPPING_EASYPACK24_API_URL',
             'MODULE_SHIPPING_EASYPACK24_API_KEY',
             'MODULE_SHIPPING_EASYPACK24_PRICE',
+            'MODULE_SHIPPING_EASYPACK24_TAX_CLASS',
             'MODULE_SHIPPING_EASYPACK24_MAX_WEIGHT',
             'MODULE_SHIPPING_EASYPACK24_MAX_DIMENSION_A',
             'MODULE_SHIPPING_EASYPACK24_MAX_DIMENSION_B',
@@ -372,7 +377,7 @@ class easypack24 {
         $parcel_status = 'Created';
         $parcel_detail = array(
             //'cod_amount' => Mage::getStoreConfig('carriers/easypack24/cod_amount'),
-            'description' => '',
+            'description' => 'Order number:'.$order_id,
             //'insurance_amount' => Mage::getStoreConfig('carriers/easypack24/insurance_amount'),
             'receiver' => array(
                 'email' => $shipping['easypack24']['user_email'],
@@ -392,7 +397,7 @@ class easypack24 {
             'methodType' => 'POST',
             'params' => array(
                 //'cod_amount' => '',
-                'description' => '',
+                'description' => @$parcel_detail['description'],
                 //'insurance_amount' => '',
                 'receiver' => array(
                     'phone' => str_replace('mob:', '', @$parcel_detail['receiver']['phone']),
@@ -457,6 +462,7 @@ class easypack24 {
             if(@$shipping['easypack24']['parcelTargetMachineDetail']['address']['flat_number'] != ''){
                 $street_address .= '/'.$shipping['easypack24']['parcelTargetMachineDetail']['address']['flat_number'];
             }
+
 
             tep_db_query("update " . TABLE_ORDERS . " set
                 delivery_street_address = '" . $street_address . "',
