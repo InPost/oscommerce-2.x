@@ -60,8 +60,8 @@
   define('TABLE_WHOS_ONLINE', 'whos_online');
   define('TABLE_ZONES', 'zones');
 
-  // start easypack24
-  define('TABLE_ORDER_SHIPPING_EASYPACK24', 'order_shipping_easypack24');
-  // end easypack24
+  // start inpostparcels
+  define('TABLE_ORDER_SHIPPING_INPOSTPARCELS', 'order_shipping_inpostparcels');
+  // end inpostparcels
 
 ?>

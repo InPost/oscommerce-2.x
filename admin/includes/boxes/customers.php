@@ -23,13 +23,13 @@
         'title' => BOX_CUSTOMERS_ORDERS,
         'link' => tep_href_link(FILENAME_ORDERS)
       ),
-      /* start easypack24 */
+      // start inpostparcels
       array(
-          'code' => FILENAME_EASYPACK24,
-          'title' => BOX_CUSTOMERS_EASYPACK24,
-          'link' => tep_href_link(FILENAME_EASYPACK24)
+          'code' => FILENAME_INPOSTPARCELS,
+          'title' => BOX_CUSTOMERS_INPOSTPARCELS,
+          'link' => tep_href_link(FILENAME_INPOSTPARCELS)
       )
-      /* end easypack24 */
+      // end inpostparcels
 
     )
   );

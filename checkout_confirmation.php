@@ -64,19 +64,19 @@
   require(DIR_WS_CLASSES . 'shipping.php');
   $shipping_modules = new shipping($shipping);
 
-  // start easypack24
-  if (preg_match('/easypack24/', $shipping['id'])) {
+  // start inpostparcels
+  if (preg_match('/inpostparcels/', $shipping['id'])) {
       //if ($shipping['payment_cod'] == 'f' && $payment == 'cod')
-      //    tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, 'error_message='.MODULE_SHIPPING_EASYPACK24_ERROR_UNAVAILABLE_COD, 'SSL'));
-      $order->delivery['street_address'] = $shipping['easypack24']['parcelTargetMachineDetail']['address']['street'].' '.$shipping['easypack24']['parcelTargetMachineDetail']['address']['building_number'];
-      if(@$shipping['easypack24']['parcelTargetMachineDetail']['address']['flat_number'] != ''){
-          $order->delivery['street_address'] .= '/'.$shipping['easypack24']['parcelTargetMachineDetail']['address']['flat_number'];
+      //    tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, 'error_message='.MODULE_SHIPPING_INPOSTPARCELS_ERROR_UNAVAILABLE_COD, 'SSL'));
+      $order->delivery['street_address'] = $shipping['inpostparcels']['parcelTargetMachineDetail']['address']['street'].' '.$shipping['inpostparcels']['parcelTargetMachineDetail']['address']['building_number'];
+      if(@$shipping['inpostparcels']['parcelTargetMachineDetail']['address']['flat_number'] != ''){
+          $order->delivery['street_address'] .= '/'.$shipping['inpostparcels']['parcelTargetMachineDetail']['address']['flat_number'];
       }
-      $order->delivery['city'] = $shipping['easypack24']['parcelTargetMachineDetail']['address']['city'];
-      $order->delivery['postcode'] = $shipping['easypack24']['parcelTargetMachineDetail']['address']['post_code'];
-      $order->delivery['state'] = $shipping['easypack24']['parcelTargetMachineDetail']['address']['province'];
+      $order->delivery['city'] = $shipping['inpostparcels']['parcelTargetMachineDetail']['address']['city'];
+      $order->delivery['postcode'] = $shipping['inpostparcels']['parcelTargetMachineDetail']['address']['post_code'];
+      $order->delivery['state'] = $shipping['inpostparcels']['parcelTargetMachineDetail']['address']['province'];
   }
-  // end easypack24
+  // end inpostparcels
 
 
   require(DIR_WS_CLASSES . 'order_total.php');

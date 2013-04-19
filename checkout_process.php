@@ -259,17 +259,17 @@
     $email_order .= strip_tags($order_totals[$i]['title']) . ' ' . strip_tags($order_totals[$i]['text']) . "\n";
   }
 
-  // start easypack24
+  // start inpostparcels
   if ($order->content_type != 'virtual') {
-      if (preg_match('/easypack24/', $shipping['id'])) {
+      if (preg_match('/inpostparcels/', $shipping['id'])) {
           $format_id = tep_get_address_format_id($address['country_id']);
-          $order->delivery['street_address'] = $shipping['easypack24']['parcelTargetMachineDetail']['address']['street'].' '.$shipping['easypack24']['parcelTargetMachineDetail']['address']['building_number'];
-          if(@$shipping['easypack24']['parcelTargetMachineDetail']['address']['flat_number'] != ''){
-              $order->delivery['street_address'] .= '/'.$shipping['easypack24']['parcelTargetMachineDetail']['address']['flat_number'];
+          $order->delivery['street_address'] = $shipping['inpostparcels']['parcelTargetMachineDetail']['address']['street'].' '.$shipping['inpostparcels']['parcelTargetMachineDetail']['address']['building_number'];
+          if(@$shipping['inpostparcels']['parcelTargetMachineDetail']['address']['flat_number'] != ''){
+              $order->delivery['street_address'] .= '/'.$shipping['inpostparcels']['parcelTargetMachineDetail']['address']['flat_number'];
           }
-          $order->delivery['city'] = $shipping['easypack24']['parcelTargetMachineDetail']['address']['city'];
-          $order->delivery['postcode'] = $shipping['easypack24']['parcelTargetMachineDetail']['address']['post_code'];
-          $order->delivery['state'] = $shipping['easypack24']['parcelTargetMachineDetail']['address']['province'];
+          $order->delivery['city'] = $shipping['inpostparcels']['parcelTargetMachineDetail']['address']['city'];
+          $order->delivery['postcode'] = $shipping['inpostparcels']['parcelTargetMachineDetail']['address']['post_code'];
+          $order->delivery['state'] = $shipping['inpostparcels']['parcelTargetMachineDetail']['address']['province'];
 
           $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
               EMAIL_SEPARATOR . "\n" .
@@ -280,7 +280,7 @@
               tep_address_label($customer_id, $sendto, 0, '', "\n") . "\n";
       }
   }
-  // end easypack24
+  // end inpostparcels
 
   $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
                   EMAIL_SEPARATOR . "\n" .
@@ -306,12 +306,12 @@
 
   $cart->reset(true);
 
-  // start easypack24
-  if (preg_match('/easypack24_/', $shipping['id'])) {
-      $easypack24 = new easypack24();
-      $easypack24->create_parcel($shipping, $payment, $order->info['total'], $insert_id);
+  // start inpostparcels
+  if (preg_match('/inpostparcels_/', $shipping['id'])) {
+      $inpostparcels = new inpostparcels();
+      $inpostparcels->create_parcel($shipping, $payment, $order->info['total'], $insert_id);
   }
-  // end easypack24
+  // end inpostparcels
 
 // unregister session variables used during checkout
   tep_session_unregister('sendto');

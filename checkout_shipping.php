@@ -128,12 +128,12 @@
                                 'title' => (($free_shipping == true) ?  $quote[0]['methods'][0]['title'] : $quote[0]['module'] . ' (' . $quote[0]['methods'][0]['title'] . ')'),
                                 'cost' => $quote[0]['methods'][0]['cost']);
 
-                // start easypack24
-                if (preg_match('/easypack24_/', $shipping['id'])) {
-                    $easypack24 = new easypack24();
-                    $shipping = $easypack24->prepare_shipping($quote, $shipping, $free_shipping);
+                // start inpostparcels
+                if (preg_match('/inpostparcels_/', $shipping['id'])) {
+                    $inpostparcels = new inpostparcels();
+                    $shipping = $inpostparcels->prepare_shipping($quote, $shipping, $free_shipping);
                 }
-                // end easyack24
+                // end inpostparcels
 
                 tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
             }
@@ -283,11 +283,11 @@ function rowOutEffect(object) {
       </tr>
 
 <?php
-        // start easypack24
-        } elseif ($quotes[$i]['module'] == MODULE_SHIPPING_EASYPACK24_TEXT_TITLE) {
-            $easypack24 = new easypack24();
-            $easypack24->generate_form($quotes[$i]);
-        // end easypack24
+        // start inpostparcels
+        } elseif ($quotes[$i]['module'] == MODULE_SHIPPING_INPOSTPARCELS_TEXT_TITLE) {
+            $inpostparcels = new inpostparcels();
+            $inpostparcels->generate_form($quotes[$i]);
+        // end inpostparcels
         } else {
           for ($j=0, $n2=sizeof($quotes[$i]['methods']); $j<$n2; $j++) {
 // set the radio button to be checked if it is the method chosen
