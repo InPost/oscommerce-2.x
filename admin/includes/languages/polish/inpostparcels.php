@@ -1,5 +1,5 @@
 <?php
-define('TEST_LANG', 'INPOSTPARCELS PL');
+define('TEST_LANG', 'INPOSTPARCELS EN');
 define('INPOSTPARCELS_LINK', 'InPost Parcels');
 define('INPOSTPARCELS_NAME', 'InPost Parcel Lockers 24/7');
 define('INPOSTPARCELS_SUBTITLE', 'Price');

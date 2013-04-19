@@ -284,7 +284,7 @@ function rowOutEffect(object) {
 
 <?php
         // start inpostparcels
-        } elseif ($quotes[$i]['module'] == MODULE_SHIPPING_INPOSTPARCELS_TEXT_TITLE) {
+        } elseif ($quotes[$i]['module'] == INPOSTPARCELS_NAME) {
             $inpostparcels = new inpostparcels();
             $inpostparcels->generate_form($quotes[$i]);
         // end inpostparcels
