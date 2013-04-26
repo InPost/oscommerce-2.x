@@ -25,8 +25,6 @@ define('INPOSTPARCELS_MOB_EXAMPLE', 'Mobile e.g. 523045856 *');
 define('INPOSTPARCELS_MAP', 'Map');
 define('INPOSTPARCELS_WEIGHT_UNIT', 'lb');
 
-
-
 define('INPOSTPARCELS_VALID_SELECT', 'Select target machine');
 define('INPOSTPARCELS_VALID_MOBILE', 'Mobile is invalid. Correct is e.g. 111222333. /^[1-9]{1}\d{8}$/');
 define('INPOSTPARCELS_VALID_EMAIL', 'Please correct email in shipping address or user profile');
@@ -107,6 +105,7 @@ define('INPOSTPARCELS_CONFIG_INFO_MAX_DIMENSION_A', 'Max dimension of items in c
 define('INPOSTPARCELS_CONFIG_INFO_MAX_DIMENSION_B', 'Max dimension of items in checkout.');
 define('INPOSTPARCELS_CONFIG_INFO_MAX_DIMENSION_C', 'Max dimension of items in checkout.');
 define('INPOSTPARCELS_CONFIG_INFO_ALLOWED_COUNTRY', 'Allowed country.');
+define('INPOSTPARCELS_CONFIG_INFO_SHOP_CITIES', 'Shop Cities.');
 
 define('INPOSTPARCELS_CONFIG_API_URL', 'Api url');
 define('INPOSTPARCELS_CONFIG_API_KEY', 'Api key');
@@ -117,6 +116,7 @@ define('INPOSTPARCELS_CONFIG_MAX_DIMENSION_A', 'Max dimension a');
 define('INPOSTPARCELS_CONFIG_MAX_DIMENSION_B', 'Max dimension b');
 define('INPOSTPARCELS_CONFIG_MAX_DIMENSION_C', 'Max dimension C');
 define('INPOSTPARCELS_CONFIG_ALLOWED_COUNTRY', 'Allowed country');
+define('INPOSTPARCELS_CONFIG_SHOP_CITIES', 'Shop Cities');
 
 define('INPOSTPARCELS_CONFIG_DEFAULT_API_URL', "http://api-uk.easypack24.net/");
 define('INPOSTPARCELS_CONFIG_DEFAULT_PRICE', "14");

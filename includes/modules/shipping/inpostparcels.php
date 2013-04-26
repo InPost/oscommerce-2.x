@@ -100,13 +100,21 @@ class inpostparcels {
         $this->inpostparcels['parcel_size'] = $calculateDimension['parcelSize'];
 
         // get machines
+        $machine_params = array();
+        switch(inpostparcels_getCurrentApi()){
+            case 'PL':
+                $machine_params['payment_available'] = true;
+                break;
+            case 'UK':
+                break;
+        }
+
         $allMachines = inpostparcels_connect(
             array(
                 'url' => constant('MODULE_SHIPPING_INPOSTPARCELS_API_URL').'machines',
                 'token' => constant('MODULE_SHIPPING_INPOSTPARCELS_API_KEY'),
                 'methodType' => 'GET',
-                'params' => array(
-                )
+                'params' => $machine_params
             )
         );
 
@@ -268,7 +276,8 @@ class inpostparcels {
             'MODULE_SHIPPING_INPOSTPARCELS_MAX_DIMENSION_A',
             'MODULE_SHIPPING_INPOSTPARCELS_MAX_DIMENSION_B',
             'MODULE_SHIPPING_INPOSTPARCELS_MAX_DIMENSION_C',
-            'MODULE_SHIPPING_INPOSTPARCELS_ALLOWED_COUNTRY'
+            'MODULE_SHIPPING_INPOSTPARCELS_ALLOWED_COUNTRY',
+            'MODULE_SHIPPING_INPOSTPARCELS_SHOP_CITIES'
 		);
 		return $keys;
 	}
@@ -280,7 +289,7 @@ class inpostparcels {
 
         $checked = preg_match('/inpostparcels/', $shipping['id']);
         ?>
-        <script type="text/javascript" src="https://geowidget.inpost.co.uk/dropdown.php?field_to_update=name&field_to_update2=address&user_function=user_function"></script>
+        <script type="text/javascript" src="<?php echo inpostparcels_getGeowidgetUrl(); ?>"></script>
         <?php
 
         if ( ($checked) || ($n == 1 && $n2 == 1) ) {

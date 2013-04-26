@@ -209,4 +209,21 @@ function inpostparcels_getCurrentApi(){
     return $currentApi;
 }
 
+function inpostparcels_getVersion(){
+    return '1.0.0';
+}
+
+function inpostparcels_getGeowidgetUrl(){
+
+    switch(inpostparcels_getCurrentApi()){
+        case 'UK':
+            return 'https://geowidget.inpost.co.uk/dropdown.php?field_to_update=name&field_to_update2=address&user_function=user_function';
+            break;
+
+        case 'PL':
+            return 'https://geowidget.inpost.pl/dropdown.php?field_to_update=name&field_to_update2=address&user_function=user_function';
+            break;
+    }
+
+}
 ?>
