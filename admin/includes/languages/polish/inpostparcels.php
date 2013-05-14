@@ -115,7 +115,7 @@ define('INPOSTPARCELS_CONFIG_MAX_DIMENSION_A', 'Maksymalny rozmiar - rozmiar M.'
 define('INPOSTPARCELS_CONFIG_MAX_DIMENSION_B', 'Maksymalny rozmiar - rozmiar S.');
 define('INPOSTPARCELS_CONFIG_MAX_DIMENSION_C', 'Maksymalny rozmiar - rozmiar D.');
 define('INPOSTPARCELS_CONFIG_ALLOWED_COUNTRY', 'Dozwolony kraj.');
-define('INPOSTPARCELS_CONFIG_SHOW_CITIES', 'Lista miast.');
+define('INPOSTPARCELS_CONFIG_SHOP_CITIES', 'Lista miast.');
 
 define('INPOSTPARCELS_CONFIG_DEFAULT_API_URL', "http://api-pl.easypack24.net/");
 define('INPOSTPARCELS_CONFIG_DEFAULT_PRICE', "14");

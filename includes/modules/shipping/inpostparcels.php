@@ -228,7 +228,7 @@ class inpostparcels {
         $languages_query = tep_db_query("select configuration_value from configuration where configuration_key='DEFAULT_LANGUAGE'");
         $def_lan = tep_db_fetch_array($languages_query);
 
-        if(isset($def_lan['configuration_value]'])){
+        if(isset($def_lan['configuration_value'])){
             $default_lang = $def_lan['configuration_value'];
         }
 
