@@ -150,6 +150,7 @@ class inpostparcels {
         $parcelTargetMachinesId = array();
         $parcelTargetMachinesDetail = array();
         $this->inpostparcels['defaultSelect'] = INPOSTPARCELS_SELECT_MACHINE;
+
         if(is_array(@$machines) && !empty($machines)){
             foreach($machines as $key => $machine){
                 $parcelTargetMachinesId[$machine->id] = $machine->id.', '.@$machine->address->city.', '.@$machine->address->street;
@@ -307,9 +308,11 @@ class inpostparcels {
             <td>
                 <br>&nbsp; &nbsp; &nbsp; &nbsp;<select id="shipping_inpostparcels" onChange="choose_from_dropdown()" name="shipping_inpostparcels[parcel_target_machine_id]">
                     <option value='' <?php if(@$_POST['shipping_inpostparcels']['parcel_target_machine_id'] == ''){ echo "selected=selected";} ?>><?php echo @$quotes['methods'][0]['inpostparcels']['defaultSelect'];?></option>
-                    <?php foreach(@$quotes['methods'][0]['inpostparcels']['parcelTargetMachinesId'] as $key => $parcelTargetMachineId): ?>
-                    <option value='<?php echo $key ?>' <?php if(@$_POST['shipping_inpostparcels']['parcel_target_machine_id'] == $key){ echo "selected=selected";} ?>><?php echo @$parcelTargetMachineId;?></option>
-                    <?php endforeach; ?>
+                    <?php if(isset($quotes['methods'][0]['inpostparcels']['parcelTargetMachinesId'])): ?>
+                        <?php foreach(@$quotes['methods'][0]['inpostparcels']['parcelTargetMachinesId'] as $key => $parcelTargetMachineId): ?>
+                        <option value='<?php echo $key ?>' <?php if(@$_POST['shipping_inpostparcels']['parcel_target_machine_id'] == $key){ echo "selected=selected";} ?>><?php echo @$parcelTargetMachineId;?></option>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </select>
                 <input type="hidden" id="name" name="name" disabled="disabled" />
                 <input type="hidden" id="box_machine_town" name="box_machine_town" disabled="disabled" />
@@ -358,23 +361,33 @@ class inpostparcels {
             jQuery(document).ready(function(){
                 jQuery('input[type="checkbox"][name="show_all_machines"]').click(function(){
                     var machines_list_type = jQuery(this).is(':checked');
-
+                    //alert($('select#shipping_inpostparcels option:selected').text());
                     if(machines_list_type == true){
                         //alert('all machines');
                         var machines = {
-                            '' : '<?php echo INPOSTPARCELS_SELECT_MACHINE ?>',
-                            <?php foreach($quotes['methods'][0]['inpostparcels']['parcelTargetAllMachinesId'] as $key => $parcelTargetAllMachineId): ?>
-                                '<?php echo $key ?>' : '<?php echo addslashes($parcelTargetAllMachineId) ?>',
-                                <?php endforeach; ?>
+                            '' : '<?php echo INPOSTPARCELS_SELECT_MACHINE ?>'
                         };
+                        <?php if(isset($quotes['methods'][0]['inpostparcels']['parcelTargetAllMachinesId'])): ?>
+                            var machines = {
+                                '' : '<?php echo INPOSTPARCELS_SELECT_MACHINE ?>',
+                                <?php foreach(@$quotes['methods'][0]['inpostparcels']['parcelTargetAllMachinesId'] as $key => $parcelTargetAllMachineId): ?>
+                                    '<?php echo $key ?>' : '<?php echo addslashes($parcelTargetAllMachineId) ?>',
+                                    <?php endforeach; ?>
+                            };
+                        <?php endif; ?>
                     }else{
                         //alert('criteria machines');
                         var machines = {
-                            '' : '<?php echo INPOSTPARCELS_SHOW_TERMINAL ?>',
-                            <?php foreach($quotes['methods'][0]['inpostparcels']['parcelTargetMachinesId'] as $key => $parcelTargetMachineId): ?>
-                                '<?php echo $key ?>' : '<?php echo addslashes($parcelTargetMachineId) ?>',
-                                <?php endforeach; ?>
+                            '' : '<?php echo INPOSTPARCELS_DEFAULT_SELECT ?>'
                         };
+                        <?php if(isset($quotes['methods'][0]['inpostparcels']['parcelTargetMachinesId'])): ?>
+                            var machines = {
+                                '' : '<?php echo INPOSTPARCELS_DEFAULT_SELECT ?>',
+                                <?php foreach($quotes['methods'][0]['inpostparcels']['parcelTargetMachinesId'] as $key => $parcelTargetMachineId): ?>
+                                    '<?php echo $key ?>' : '<?php echo addslashes($parcelTargetMachineId) ?>',
+                                    <?php endforeach; ?>
+                            };
+                        <?php endif; ?>
                     }
 
                     jQuery('#shipping_inpostparcels option').remove();
