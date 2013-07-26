@@ -105,8 +105,13 @@ class InpostparcelsModel {
         }
 
         if(!is_null($pdf)){
-            header('Content-type', 'application/pdf');
-            header('Content-Disposition: attachment; filename=stickers_'.date('Y-m-d_H-i-s').'.pdf');
+            $fileName = 'stickers_'.date('Y-m-d_H-i-s').'.pdf';
+            header('P3P: CP="NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM"', false);
+            header('Content-Type: application/pdf', false);
+            header('Content-disposition: inline; filename='.$fileName.'', false);
+            header('Content-Type: application/pdf; charset=utf-8', false);
+            header('Cache-Control: no-cache', false);
+            header('Pragma: no-cache', false);
             print_r($pdf);
         }
     }
