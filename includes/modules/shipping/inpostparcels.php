@@ -135,12 +135,15 @@ class inpostparcels {
                         'city' => @$machine->address->city
                     )
                 );
+                /*
                 if($machine->address->post_code == $customer['postcode']){
                     $machines[$key] = $machine;
                     continue;
                 }elseif($machine->address->city == $customer['city']){
                     $machines[$key] = $machine;
                 }
+                */
+                $machines[$key] = $machine;
 
                 $this->inpostparcels['parcelTargetAllMachinesId'] = $parcelTargetAllMachinesId;
                 $this->inpostparcels['parcelTargetAllMachinesDetail'] = $parcelTargetAllMachinesDetail;
@@ -318,7 +321,7 @@ class inpostparcels {
                 <input type="hidden" id="box_machine_town" name="box_machine_town" disabled="disabled" />
                 <input type="hidden" id="address" name="address" disabled="disabled" />
                 <br>&nbsp; &nbsp; &nbsp; &nbsp;
-                <a href="#" onclick="openMap(); return false;"><?php echo INPOSTPARCELS_MAP ?></a>&nbsp|&nbsp<input type="checkbox" name="show_all_machines"> <?php echo INPOSTPARCELS_SHOW_TERMINALS ?>
+                <a href="#" onclick="openMap(); return false;"><?php echo INPOSTPARCELS_MAP ?></a>
                 <br>
                 <br>&nbsp; &nbsp; &nbsp; &nbsp;<b><?php echo INPOSTPARCELS_MOB_EXAMPLE ?>: </b>
                 <br>&nbsp; &nbsp; &nbsp; &nbsp;(07) <input type='text' onChange="choose_from_dropdown()" name='shipping_inpostparcels[receiver_phone]' title="mobile /^[1-9]{1}\d{8}$/" id="inpostparcels_phone" title="<?php echo INPOSTPARCELS_MAP ?>" value='<?php echo @$_POST['shipping_inpostparcels']['receiver_phone']?@$_POST['shipping_inpostparcels']['receiver_phone']:@$quotes['methods'][0]['customer']['phone']; ?>' />
